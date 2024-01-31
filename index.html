@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #3498db; 
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 0 0 10px 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .task {
+            background-color: #ecf0f1; 
+            border: 1px solid #bdc3c7;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .task label {
+            flex-grow: 1;
+            margin-bottom: 5px;
+            color: #34495e; 
+        }
+
+        .task .priority {
+            font-size: 12px;
+            color: #7f8c8d; 
+        }
+
+        .high-priority {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .medium-priority {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .low-priority {
+            border-color: #2ecc71; 
+            color: #2ecc71;
+        }
+
+        .completed-task {
+            background-color: #bdc3c7; 
+            text-decoration: line-through;
+            color: #7f8c8d; 
+        }
+
+        form {
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #7f8c8d; 
+        }
+
+        input[type="text"],
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #3498db; 
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9; 
+        }
+
+        #priorityDisplay {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        To-Do List
+    </header>
+    <div class="container" id="app">
+        <form id="taskForm">
+            <label for="taskText">New Task:</label>
+            <input type="text" id="taskText" required>
+
+            <label for="priority">Priority:</label>
+            <select id="priority" required>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <button type="button" onclick="addTask()">Add Task</button>
+        </form>
+
+        <div id="priorityDisplay"></div>
+    </div>
+
+    <script>
+        function addTask() {
+    const taskText = document.getElementById("taskText").value;
+    const priority = document.getElementById("priority").value;
+
+    if (taskText.trim() === "") {
+        alert("Please enter a task");
+        return;
+    }
+
+    const container = document.getElementById("app");
+
+    const taskElement = document.createElement("div");
+    taskElement.classList.add("task", priority);
+    if (priority === 'high') {
+        taskElement.style.borderColor = '#e74c3c'; 
+        taskElement.style.color = '#e74c3c';
+    } else if (priority === 'medium') {
+        taskElement.style.borderColor = '#f39c12'; 
+        taskElement.style.color = '#f39c12';
+    } else {
+        taskElement.style.borderColor = '#2ecc71'; 
+        taskElement.style.color = '#2ecc71';
+    }
+
+    const labelElement = document.createElement("label");
+    labelElement.textContent = taskText;
+
+    const priorityElement = document.createElement("div");
+    priorityElement.classList.add("priority");
+    priorityElement.textContent = `Priority: ${priority}`;
+
+    const checkboxElement = document.createElement("input");
+    checkboxElement.type = "checkbox";
+
+    checkboxElement.addEventListener("change", function () {
+        taskElement.classList.toggle("completed-task");
+    });
+
+    taskElement.appendChild(labelElement);
+    taskElement.appendChild(priorityElement);
+    taskElement.appendChild(checkboxElement);
+    container.appendChild(taskElement);
+
+    
+    const priorityDisplay = document.getElementById("priorityDisplay");
+    priorityDisplay.textContent = `Last Added Task Priority: ${priority}`;
+
+    
+    document.getElementById("taskText").value = "";
+    document.getElementById("priority").value = "high";
+}
+
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("app");
+    
+            document.getElementById("taskForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                addTask();
+            });
+    
+            
+            const tasks = [
+                { text: "Create website wireframes", priority: "high", completed: false },
+                { text: "Design homepage", priority: "medium", completed: true },
+                { text: "Implement responsive layout", priority: "low", completed: false }
+            ];
+    
+            tasks.forEach(task => {
+                const taskElement = document.createElement("div");
+                taskElement.classList.add("task", task.priority);
+                if (task.completed) {
+                    taskElement.classList.add("completed-task");
+                }
+    
+                if (task.priority === 'high') {
+                    taskElement.style.borderColor = '#e74c3c'; 
+                    taskElement.style.color = '#e74c3c';
+                } else if (task.priority === 'medium') {
+                    taskElement.style.borderColor = '#f39c12';
+                    taskElement.style.color = '#f39c12';
+                } else {
+                    taskElement.style.borderColor = '#2ecc71'; 
+                    taskElement.style.color = '#2ecc71';
+                }
+    
+                const labelElement = document.createElement("label");
+                labelElement.textContent = task.text;
+    
+                const priorityElement = document.createElement("div");
+                priorityElement.classList.add("priority");
+                priorityElement.textContent = `Priority: ${task.priority}`;
+    
+                const checkboxElement = document.createElement("input");
+                checkboxElement.type = "checkbox";
+                checkboxElement.checked = task.completed;
+    
+                checkboxElement.addEventListener("change", function () {
+                    taskElement.classList.toggle("completed-task");
+                });
+    
+                taskElement.appendChild(labelElement);
+                taskElement.appendChild(priorityElement);
+                taskElement.appendChild(checkboxElement);
+                container.appendChild(taskElement);
+            });
+        });
+    </script>
+    
+</body>
+</html>
